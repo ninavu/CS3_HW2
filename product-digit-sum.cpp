@@ -24,27 +24,23 @@ int main(){
 	cout << "b: ";
 	cin >> b;
 	
-	while (a < 0 || b < 0){				//keep prompting the user for positive integers input
-		cout << "You dumb dumb! Positive integers only!" << endl;
-		cout << "a: ";
-		cin >> a;
-		cout << "b: ";
-		cin >> b;
+	if (a >= 0 && b >= 0){				//only calculate if the input is valid
+		product = pow(a, b);			//call pow(a,b) function to calculate a^b
+	
+		cout << a << "^" << b << " = " << product << endl;
+	
+		//calculate the sum of the digits of the product
+		while (product > 0){
+			
+			sum += product % 10;	//add the last digit of the number to sum			
+			product /= 10;			//remove last digit directly from product to calculate a new last digit			
+		}
+		
+		cout << "Sum Of Digits: " << sum << endl;
+		
+	} else {
+		cout << "Invalid input! You dumb dumb!" << endl;
 	}
-	
-	product = pow(a, b);			//call pow(a,b) function to calculate a^b
-	
-	cout << a << "^" << b << " = " << product << endl;
-	
-	/* calculate the sum of the digits of the product by
-	 * adding last digit of each number (after dividing by 10)
-	 * to the sum */
-	while (product > 0){	
-		sum += product % 10;					
-		product /= 10;						
-	}
-	
-	cout << "Sum Of Digits: " << sum << endl;
 	return 0;
 
 }
