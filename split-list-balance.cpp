@@ -1,10 +1,12 @@
 #include <iostream>	
 #include <vector>
 #include <string>
-#include <cassert>
 
 using namespace std;
 
+/* Function takes a vector of numbers and 
+ * returns the sum of those numbers 
+ * (Reused from product-digit-sum.cpp) */
 unsigned int sum_vector(vector<int> v){
 	int sumVec = 0;
 	
@@ -14,8 +16,9 @@ unsigned int sum_vector(vector<int> v){
 	return sumVec;
 }
 
-int max(int num1, int num2){
-	int max;
+/* Function takes 2 numbers and returns the larger number */
+unsigned int max(unsigned int num1, unsigned int num2){
+	unsigned int max;
 	 
 	if (num1 < num2){
 		max = num2;
@@ -25,9 +28,10 @@ int max(int num1, int num2){
 	return max;
 }
 
-int min(vector<int> num){
-	int min = INT_MAX;
-	
+/* Function takes a vector of integers and returns the smallest number */
+unsigned int min(vector<int> num){
+	unsigned int min = INT_MAX;			// use the largest integer as a starting point
+	 
 	for (unsigned int i = 0; i < num.size(); i++){
 		if (num.at(i) < min){
 			min = num.at(i);
@@ -36,6 +40,9 @@ int min(vector<int> num){
 	return min;
 }
 
+/* Function takes a vector of numbers and 
+ * returns an "aesthetically pleasing" string representation
+ * (Reused from product-digit-sum.cpp) */
 string vec_to_string(vector<int> vec){
 	string s = "[";
 	for (unsigned int i = 0; i < vec.size(); i++){
@@ -47,52 +54,52 @@ string vec_to_string(vector<int> vec){
 	}
 	s+= "]";
 	return s;
-}
+}	
 
+/* A recursive function that takes a vector of integers, splits it into M sub-lists, 
+ * calculates the largest sum of each sub list and 
+ * then returns the smallest number of the largest sums */
 int split_vec(vector<int> vec, int m){
 	vector<int> vecLeft;
 	vector<int> vecRight;
-	int sumLeft;
-	int sumRight;
+	unsigned int sumLeft;
+	unsigned int sumRight;
 	vector<int> curMax;
-	int minSum;
+	unsigned int minSum = INT_MAX;
 	
-	if (m < 1){
-		return 0;
-	}
-	
-	if (m == 1){
+	if (m == 1){				// base case: calculating the sum of the list and return it
 		curMax.push_back(sum_vector(vec));
 		return min(curMax);
 	} 
-	
 	else {
 			
 		for (unsigned int i = 0; i < vec.size()-1; i++){
-			vecLeft.push_back(vec.at(i));
-			cout << "lhs: " << vec_to_string(vecLeft) << endl;			//COMMENT OUT
-			vecRight.clear();
-			sumLeft = sum_vector(vecLeft);
-			for (unsigned int j = i+1; j < vec.size(); j++){
-				vecRight.push_back(vec.at(j));
-			}
-			//split_vec(vecRight, m-1);
+			vecLeft.push_back(vec.at(i));					// push number 1 by 1 to the vector
+			vecRight.clear();								// clear vecRight before pushing new numbers using the loop
+			sumLeft = sum_vector(vecLeft);					// call sum_vector to calculate the sum of the left vector
 			
-			sumRight = sum_vector(vecRight);
-			cout << "rhs: " << vec_to_string(vecRight) << endl;			//COMMENT OUT
-		
-			curMax.push_back(max(sumLeft, split_vec(vecRight, m-1)));
-				
-			cout << "max sum: " << vec_to_string(curMax) << endl;			//COMMENT OU
+			for (unsigned int j = i+1; j < vec.size(); j++){
+				vecRight.push_back(vec.at(j));				// push number into an empty right vector after the left vector done with pushing 
+			}
+			
+			sumRight = sum_vector(vecRight);		
+			
+			//a recursive statement calculating the max of all sub-lists and pushing them into a vector
+			//that is updated everytime a new wave of sub-list splits
+			curMax.push_back(max(sumLeft, split_vec(vecRight, m-1)));		
 		}
-		minSum = min(curMax);
-		cout << "min val: " << minSum << endl;				//COMMENT OUT
+		minSum = min(curMax);			// calculate the minSum from the most updated maximum sum	
 	}
 	return minSum;
 }
 
 int main(){
+	vector<int> vec;
+	unsigned int num;
+	unsigned int M;
+	int result;
 	
+	cout << "Start testing..." << endl;
 	//TEST 1: M = 1
 	vector<int> alist = {2, 3, 4, 5, 6};
 	int M1 = 1;
@@ -140,10 +147,31 @@ int main(){
 	cout << "input: " << vec_to_string(flist) << "   m: " << M6 << endl;
 	cout << "ans: " << split_vec(flist, M6) << endl;
 	
+	// ALLOW USER INPUT FOR TESTING
+	cout << "Please type in positive numbers for the vector (type -1 to quit): " << endl;
+	cin >> num;
 	
+	while (num != -1){
+		if (num > 0){
+			vec.push_back(num);
+		} else {
+			cout << "Invalid Input!" << endl;
+			return 1;
+		}
+		cin >> num;
+	}
 	
-	//return invalid if m = 0 or alist.size() equals m
+	cout << "Please type in a positive M (type -1 to quit): ";
+	cin >> M;
 	
+	if (M < 1 || vec.size() < M){
+		cout << "Invalid Input! M cannot be less than 0 or M cannot be larger than the list size! " << endl;
+		return 1;
+	}
+	
+	result = split_vec(vec, M);
+	cout << "input: " << vec_to_string(vec) << "   m: " << M << endl;
+	cout << "ans: " << split_vec(vec, M) << endl;
 	
 	return 0;
 }
