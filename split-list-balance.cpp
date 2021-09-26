@@ -55,19 +55,18 @@ int split_vec(vector<int> vec, int m){
 	int sumLeft;
 	int sumRight;
 	vector<int> curMax;
-	int minSum = INT_MAX;
+	int minSum;
 	
 	if (m < 1){
-		return 1;
+		return 0;
 	}
 	
 	if (m == 1){
-		return sum_vector(vec);
+		curMax.push_back(sum_vector(vec));
+		return min(curMax);
 	} 
 	
-	else {//if (m == 2){
-		
-		//for (unsigned int i = 1; i < m; i++){
+	else {
 			
 		for (unsigned int i = 0; i < vec.size()-1; i++){
 			vecLeft.push_back(vec.at(i));
@@ -77,21 +76,18 @@ int split_vec(vector<int> vec, int m){
 			for (unsigned int j = i+1; j < vec.size(); j++){
 				vecRight.push_back(vec.at(j));
 			}
-			split_vec(vecRight, m-1);
+			//split_vec(vecRight, m-1);
 			
 			sumRight = sum_vector(vecRight);
 			cout << "rhs: " << vec_to_string(vecRight) << endl;			//COMMENT OUT
-			
-			//split_vec(vecRight, m-1);
-			curMax.push_back(max(sumLeft, sumRight));
-			minSum = min(curMax);
-				
-			cout << "max sum: " << vec_to_string(curMax) << endl;			//COMMENT OUT
-			cout << "min val: " << minSum << endl;				//COMMENT OUT
-			}
 		
+			curMax.push_back(max(sumLeft, split_vec(vecRight, m-1)));
+				
+			cout << "max sum: " << vec_to_string(curMax) << endl;			//COMMENT OU
+		}
+		minSum = min(curMax);
+		cout << "min val: " << minSum << endl;				//COMMENT OUT
 	}
-	minSum = min(curMax);
 	return minSum;
 }
 
@@ -100,25 +96,53 @@ int main(){
 	//TEST 1: M = 1
 	vector<int> alist = {2, 3, 4, 5, 6};
 	int M1 = 1;
-	cout << "input: " << vec_to_string(alist) << "   ";
-	cout << "m: " << M1 << endl;
+	cout << "input: " << vec_to_string(alist) << "   m: " << M1 << endl;
 	cout << "ans: " << split_vec(alist, M1) << endl;
 	
 	//TEST 2: M = 2
-	vector<int> blist = {2, 3, 4, 5, 6};
+	vector<int> blist = {7, 2, 5, 10, 8};
 	int M2 = 2;
-	cout << "input: " << vec_to_string(blist) << "   ";
-	cout << "m: " << M2 << endl;
+	cout << "input: " << vec_to_string(blist) << "   m: " << M2 << endl;
 	cout << "ans: " << split_vec(blist, M2) << endl;
 	
+	cout << "input: " << vec_to_string(alist) << "   m: " << M2 << endl;
+	cout << "ans: " << split_vec(alist, M2) << endl;
+	
+	
 	//TEST 3: M = 3
-	vector<int> clist = {2, 3, 4, 5, 6};
+	vector<int> clist = {1, 4, 4};
 	int M3 = 3;
-	cout << "input: " << vec_to_string(alist) << "   ";
-	cout << "m: " << M3 << endl;
+	cout << "input: " << vec_to_string(clist) << "   m: " << M3 << endl;
 	cout << "ans: " << split_vec(clist, M3) << endl;
 	
-	//return invalid if m = 0 or alist equals 
+	//TEST 4: M = 4
+	vector<int> dlist = {1, 3, 7, 2, 5};
+	int M4 = 4;
+	cout << "input: " << vec_to_string(dlist) << "   m: " << M4 << endl;
+	cout << "ans: " << split_vec(dlist, M4) << endl;
+	
+	cout << "input: " << vec_to_string(clist) << "   m: " << M4 << endl;
+	cout << "ans: " << split_vec(clist, M4) << endl;
+	
+	//TEST 5: M = 5
+	vector<int> elist = {1, 3, 7, 2, 4, 6, 9};
+	int M5 = 5;
+	cout << "input: " << vec_to_string(elist) << "   m: " << M5 << endl;
+	cout << "ans: " << split_vec(elist, M5) << endl;
+	
+	cout << "input: " << vec_to_string(alist) << "   m: " << M5 << endl;
+	cout << "ans: " << split_vec(alist, M5) << endl;
+	
+	
+	//TEST 6: M = -1
+	vector<int> flist = {2, 3, 4, 5, 6, 7};
+	int M6 = -1;
+	cout << "input: " << vec_to_string(flist) << "   m: " << M6 << endl;
+	cout << "ans: " << split_vec(flist, M6) << endl;
+	
+	
+	
+	//return invalid if m = 0 or alist.size() equals m
 	
 	
 	return 0;
