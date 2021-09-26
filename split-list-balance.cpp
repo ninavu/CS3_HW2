@@ -161,7 +161,7 @@ int main(){
 		cin >> num;
 	}
 	
-	cout << "Please type in a positive M (type -1 to quit): ";
+	cout << "Please type in a positive M: ";
 	cin >> M;
 	
 	if (M < 1 || vec.size() < M){
